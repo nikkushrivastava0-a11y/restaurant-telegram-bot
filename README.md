@@ -11,8 +11,7 @@ A fully functional Telegram bot that handles restaurant orders using **natural l
 
 > 📹 *Watch the bot take a real order in real time — customer messages in plain language, bot confirms and logs it instantly.*
 
-<video src="https://youtu.be/-9gJui16PdA?si=n-u2CLOzgz8CINUD" width="100%" controls autoplay muted loop></video>
-
+▶️ **[Click Here to Watch the Full Live Demo Video on YouTube](https://youtu.be/-9gJui16PdA?si=n-u2CLOzgz8CINUD)**
 
 ---
 

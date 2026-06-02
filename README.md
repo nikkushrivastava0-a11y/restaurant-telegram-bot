@@ -6,11 +6,13 @@ A fully functional Telegram bot that handles restaurant orders using **natural l
 
 ---
 
+
 ## 🚀 Demo
 
 > 📹 *Watch the bot take a real order in real time — customer messages in plain language, bot confirms and logs it instantly.*
 
-<!-- Add your demo video/GIF link here -->
+<video src="https://youtu.be/-9gJui16PdA?si=n-u2CLOzgz8CINUD" width="100%" controls autoplay muted loop></video>
+
 
 ---
 
@@ -94,15 +96,7 @@ git clone https://github.com/nikkushrivastava0-a11y/restaurant-telegram-bot.git
 ---
 
 ## 📁 Project Structure
-
-```
-restaurant-telegram-bot/
-├── workflow.json        # n8n automation workflow (importable)
-├── README.md            # Project documentation
-└── demo/
-    └── demo-video.mp4   # Bot demo recording
-```
-
+## 📁 Project Structure
 ---
 
 ## 🎯 What I Learned
@@ -118,7 +112,9 @@ restaurant-telegram-bot/
 
 **Nitanshu Shrivastava**
 - 🎓 B.Tech CSE-AI @ GL Bajaj ITM, Greater Noida (AKTU) | 2024–2028
-- 💼 [LinkedIn]
+- 💼 [LinkedIn](https://www.linkedin.com/in/nitanshu-shrivastav-878406413/)
+
+)
 - 🐙 [GitHub](https://github.com/nikkushrivastava0-a11y)
 
 ---

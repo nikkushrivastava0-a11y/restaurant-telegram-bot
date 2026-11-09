@@ -91,3 +91,78 @@ def linkedin_png():
     out=BytesIO()
     graphic_wide().save(out,format="PNG",optimize=True)
     return Response(out.getvalue(),media_type="image/png",headers={"Cache-Control":"public,max-age=86400"})
+
+
+# Square concept pages are based on the *same fictional* brands displayed
+# on the existing /samples/{style}/ website routes.
+from fastapi import HTTPException
+CONCEPTS={
+    "modern": {
+        "brand":"Mitti & Masala",
+        "eyebrow":"MODERN / WARM INDIAN KITCHEN",
+        "head1":"A little spice.",
+        "head2":"A lot of soul.",
+        "body":"An inviting dining site for menus, hours, maps and one-tap calls.",
+        "bg":"#F8F2E8","ink":"#173B31","accent":"#E7A66B","plate":"#EACDA7",
+        "url":"/samples/modern/"
+    },
+    "bold":{
+        "brand":"FIREPAN",
+        "eyebrow":"BOLD / HIGH-ENERGY STREET FOOD",
+        "head1":"HUNGRY?",
+        "head2":"WE GOT YOU.",
+        "body":"Punchy type, big flavour, and a clear menu call-to-action.",
+        "bg":"#20211E","ink":"#F6F2DA","accent":"#F6DE53","plate":"#C95B3D",
+        "url":"/samples/bold/"
+    },
+    "minimal":{
+        "brand":"The Saffron Table",
+        "eyebrow":"MINIMAL / THOUGHTFUL DINING",
+        "head1":"Simple things,",
+        "head2":"beautifully made.",
+        "body":"A calm, understated restaurant website that stays useful.",
+        "bg":"#F2EEE5","ink":"#35372F","accent":"#B6BDA4","plate":"#9AA989",
+        "url":"/samples/minimal/"
+    }
+}
+
+def concept_graphic(style):
+    if style not in CONCEPTS:
+        raise HTTPException(404,"Unknown concept")
+    c=CONCEPTS[style]
+    bg,ink,accent=c["bg"],c["ink"],c["accent"]
+    im=Image.new("RGB",(1080,1350),bg)
+    d=ImageDraw.Draw(im)
+    d.rectangle((0,0,1080,11),fill=accent)
+    txt(d,(65,55),"NOIDA RESTAURANT WEB STUDIO",28,ink,True)
+    txt(d,(66,120),c["eyebrow"],19,ink,True)
+    name_size=55 if len(c["brand"])<18 else 48
+    txt(d,(60,202),c["brand"],name_size,ink,True)
+    # A restaurant home page mockup with a visual food placeholder.
+    d.rounded_rectangle((57,330,1024,986),radius=25,fill=ink)
+    d.rounded_rectangle((79,355,1002,960),radius=15,fill=bg)
+    d.rectangle((79,355,1002,414),fill=accent)
+    txt(d,(105,372),"HOME     MENU     STORY     VISIT",20,ink,True)
+    d.ellipse((620,488,953,821),fill=accent)
+    d.ellipse((654,522,919,787),fill=bg)
+    d.ellipse((691,558,882,749),fill=c["plate"])
+    d.ellipse((735,605,837,706),fill=accent)
+    txt(d,(118,516),c["head1"],54,ink,True)
+    txt(d,(118,585),c["head2"],47,ink,True)
+    txt(d,(122,694),"YOUR MENU, ONLINE",19,ink,True)
+    d.rounded_rectangle((115,762,414,827),radius=8,fill=ink)
+    txt(d,(144,782),"VIEW THE MENU",24,bg,True)
+    txt(d,(82,915),"MOBILE-FIRST RESTAURANT WEBSITE CONCEPT",19,ink,True)
+    txt(d,(69,1040),"01  /  MENU     02  /  MAP     03  /  CALL",25,ink,True)
+    txt(d,(66,1115),"LIVE DEMO:",19,ink,True)
+    txt(d,(65,1153),"noida-restaurant-web-studio.onrender.com",22,ink)
+    txt(d,(65,1190),c["url"],22,ink)
+    d.rectangle((0,1260,1080,1350),fill=accent)
+    txt(d,(65,1291),"FICTIONAL CONCEPT - NOT CLIENT WORK",24,ink,True)
+    return im
+
+@router.get("/assets/concept-{style}.png")
+def concept_png(style: str):
+    out=BytesIO()
+    concept_graphic(style).save(out,format="PNG",optimize=True)
+    return Response(out.getvalue(),media_type="image/png",headers={"Cache-Control":"public,max-age=86400"})

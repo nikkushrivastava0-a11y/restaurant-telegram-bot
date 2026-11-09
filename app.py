@@ -17,6 +17,8 @@ logging.basicConfig(level=logging.INFO)
 app = FastAPI(title="Noida Restaurant Web Studio")
 from sales_quote import router as sales_router
 app.include_router(sales_router)
+from social_assets import router as social_asset_router
+app.include_router(social_asset_router)
 SEND_ENABLED = os.getenv("SEND_ENABLED", "false").lower() == "true"
 SIMULATOR_ENABLED = os.getenv("SIMULATOR_ENABLED", "false").lower() == "true"
 PHONE_ID = os.getenv("WA_PHONE_NUMBER_ID", "")

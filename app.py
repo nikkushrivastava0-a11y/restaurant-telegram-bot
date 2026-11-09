@@ -15,6 +15,10 @@ from fastapi.responses import HTMLResponse, PlainTextResponse
 
 logging.basicConfig(level=logging.INFO)
 app = FastAPI(title="Noida Restaurant Web Studio")
+# Luxury router registered first, so its pages override only the original showroom.
+# Existing /webhook and /health handlers remain untouched.
+from luxury_site import router as luxury_router
+app.include_router(luxury_router)
 from sales_quote import router as sales_router
 app.include_router(sales_router)
 from social_assets import router as social_asset_router

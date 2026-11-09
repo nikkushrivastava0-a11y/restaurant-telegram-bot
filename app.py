@@ -15,6 +15,8 @@ from fastapi.responses import HTMLResponse, PlainTextResponse
 
 logging.basicConfig(level=logging.INFO)
 app = FastAPI(title="Noida Restaurant Web Studio")
+from sales_quote import router as sales_router
+app.include_router(sales_router)
 SEND_ENABLED = os.getenv("SEND_ENABLED", "false").lower() == "true"
 SIMULATOR_ENABLED = os.getenv("SIMULATOR_ENABLED", "false").lower() == "true"
 PHONE_ID = os.getenv("WA_PHONE_NUMBER_ID", "")
@@ -69,7 +71,7 @@ def health():
 
 @app.get("/", response_class=HTMLResponse)
 def landing():
-    contact = ("<a class='button' href='https://wa.me/" + SALES_WHATSAPP + "?text=Hi%2C%20I%20want%20a%20restaurant%20website'>Ask for a demo →</a>") if SALES_WHATSAPP else "<span class='badge'>WhatsApp enquiries opening soon</span>"
+    contact = ("<a class='button' href='https://wa.me/" + SALES_WHATSAPP + "?text=Hi%2C%20I%20want%20a%20restaurant%20website'>Ask for a demo →</a>") if SALES_WHATSAPP else "<a class='button' href='/quote'>Request a free proposal →</a>"
     return """<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Noida Restaurant Web Studio</title><style>""" + BASE_CSS + """body{background:#10241f;color:#f5f1e5}.top{display:flex;justify-content:space-between;padding:30px 0}.hero{text-align:center;display:block;min-height:0;padding:92px 0 42px}h1{font-size:clamp(52px,9vw,100px);max-width:950px;margin:22px auto}h1 span{color:#c5ee9f}.lead{font-size:19px;line-height:1.75;max-width:580px;margin:auto;color:#bdd0c3}.button{background:#c5ee9f;color:#10241f;padding:18px 27px;display:inline-block;margin:23px 0;font-weight:800}.badge{padding:11px;border:1px solid #ffffff49;display:inline-block;margin-top:20px}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;padding:55px 0 90px}.card{border:1px solid #ffffff30;padding:30px;background:#17352b}.card h2{font-size:33px;margin:12px 0}.card p{color:#a5c3b4;line-height:1.7}.card a{display:inline-block;border-bottom:1px solid #c5ee9f;padding:10px 0;color:#c5ee9f}.price{text-align:center;color:#d7e4c8;margin-top:25px}@media(max-width:700px){.cards{grid-template-columns:1fr}} </style></head><body><div class="wrap"><div class="top"><b class="logo">RESTAURANT WEB STUDIO.</b><span class="kicker">Noida × Greater Noida</span></div><div class="hero"><div class="kicker">Your next customer is searching</div><h1>Great food deserves a <span>great website.</span></h1><p class="lead">Mobile-first restaurant websites with menu, directions and click-to-call. Clear pricing. Designed for local businesses, not templates that all look alike.</p>""" + contact + """<p class="price">Website packages ₹3,000–₹8,000 · Optional maintenance from ₹500/month</p></div><div class="cards"><div class="card"><span class="kicker">01 / Warm & editorial</span><h2>Mitti & Masala</h2><p>Modern Indian food, fresh typography and welcoming colours.</p><a href="/samples/modern/">View Modern demo →</a></div><div class="card"><span class="kicker">02 / Bold & punchy</span><h2>FIREPAN</h2><p>Fast-food energy, dramatic contrasts and fearless copy.</p><a href="/samples/bold/">View Bold demo →</a></div><div class="card"><span class="kicker">03 / Quiet luxury</span><h2>The Saffron Table</h2><p>Minimal visual design with spacious, editorial layouts.</p><a href="/samples/minimal/">View Minimal demo →</a></div></div><footer>Independent studio · <a href="/privacy">Privacy</a><p class="notice">Demonstration brands are entirely fictional. No business ratings, photos, testimonials, menus or endorsements are represented as real.</p></footer></div></body></html>"""
 
@@ -144,3 +146,12 @@ async def webhook(request: Request, x_hub_signature_256: str | None = Header(Non
                     r.raise_for_status()
                 count += 1
     return {"ok": True, "processed": count, "messages_sent": "disabled" if not SEND_ENABLED else "inbound_replies_only"}
+
+@app.get("/robots.txt", response_class=PlainTextResponse)
+def robots():
+    return "User-agent: *\\nAllow: /\\nSitemap: https://noida-restaurant-web-studio.onrender.com/sitemap.xml\\n".replace("\\n","\n")
+
+@app.get("/sitemap.xml", response_class=PlainTextResponse)
+def sitemap():
+    u="https://noida-restaurant-web-studio.onrender.com"
+    return '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+"".join("<url><loc>"+u+p+"</loc></url>" for p in ("/","/quote","/samples/modern/","/samples/bold/","/samples/minimal/"))+"</urlset>"

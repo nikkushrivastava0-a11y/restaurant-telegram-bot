@@ -262,6 +262,29 @@ def terms():
 <a class="button button-dark" href="/quote">Request a proposal ↗</a></main>""" + studio_footer()
     return page("Terms | Noida Restaurant Web Studio",body,kind="legal")
 
+
+# Content files are served directly without any separate, billable asset service.
+# The ESM 3D bundle is optional and respects reduced-motion preferences.
+from pathlib import Path
+
+@router.get("/assets/luxury.css")
+def luxury_css():
+    return Response(Path(__file__).with_name("luxury.css").read_bytes(),
+                    media_type="text/css; charset=utf-8",
+                    headers={"Cache-Control":"public,max-age=3600"})
+
+@router.get("/assets/luxury-ui.js")
+def luxury_ui_js():
+    return Response(Path(__file__).with_name("luxury-ui.js").read_bytes(),
+                    media_type="application/javascript; charset=utf-8",
+                    headers={"Cache-Control":"public,max-age=3600"})
+
+@router.get("/assets/luxury-3d.js")
+def luxury_3d_js():
+    return Response(Path(__file__).with_name("luxury-3d.js").read_bytes(),
+                    media_type="application/javascript; charset=utf-8",
+                    headers={"Cache-Control":"public,max-age=3600"})
+
 @router.get("/assets/luxury-favicon.svg")
 def favicon():
     svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="8" fill="#13201a"/><path d="M12 47V18h8l21 22V18h10v29h-9L22 26v21z" fill="#d0b68b"/><circle cx="53" cy="51" r="4" fill="#d0b68b"/></svg>'

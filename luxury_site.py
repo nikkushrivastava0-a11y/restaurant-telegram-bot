@@ -289,3 +289,30 @@ def luxury_3d_js():
 def favicon():
     svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="8" fill="#13201a"/><path d="M12 47V18h8l21 22V18h10v29h-9L22 26v21z" fill="#d0b68b"/><circle cx="53" cy="51" r="4" fill="#d0b68b"/></svg>'
     return Response(svg,media_type="image/svg+xml",headers={"Cache-Control":"public,max-age=604800"})
+
+
+def _self_test_luxury_pages():
+    """Fail fast on broken page rendering or missing assets during a new deploy."""
+    pages = {
+        "/": studio(),
+        "/quote": quote(),
+        "/samples/modern/": demo("modern"),
+        "/samples/bold/": demo("bold"),
+        "/samples/minimal/": demo("minimal"),
+        "/privacy": privacy(),
+        "/terms": terms(),
+    }
+    for route_name, markup in pages.items():
+        assert "<html" in markup and "</html>" in markup, route_name
+        assert 'href="/assets/luxury.css?v=2"' in markup, route_name
+        assert 'href="/quote"' in markup or route_name == "/quote", route_name
+        assert '<main id="main"' in markup, route_name
+    assert 'id="luxury-enquiry"' in pages["/quote"]
+    assert 'name="package"' in pages["/quote"]
+    assert all("FICTIONAL" in pages["/samples/" + slug + "/"].upper()
+               or "Fictional" in pages["/samples/" + slug + "/"]
+               for slug in ("modern", "bold", "minimal"))
+    for filename in ("luxury.css", "luxury-ui.js", "luxury-3d.js"):
+        assert Path(__file__).with_name(filename).is_file(), filename
+
+_self_test_luxury_pages()

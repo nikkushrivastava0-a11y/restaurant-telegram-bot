@@ -1,0 +1,14 @@
+# Render blueprint for the separate OmniRoute ChatGPT gateway.
+# Existing restaurant website is NOT part of this blueprint.
+# Only free compute; keep auto-deploy disabled.
+services:
+  - type: web
+    name: omniroute-gpt-gateway
+    runtime: node
+    plan: free
+    region: singapore
+    repo: https://github.com/cheaper-inference/OmniRoute
+    branch: release/v3.8.53
+    autoDeploy: false
+    buildCommand: npm install -g omniroute@3.8.53 --no-audit --no-fund
+    startCommand: omniroute serve --headless --port $PORT
